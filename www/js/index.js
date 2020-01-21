@@ -23,25 +23,24 @@ var foundDevices = [];
 document.addEventListener('deviceready', function () {
 
     new Promise(function (resolve, reject) {
-        bluetoothle.requestPermission(functin(){
-            bluetoothle.initialize(resolve, reject,{ request: true, statusReceiver: false });
-        }, requestPermissionError);
+        bluetoothle.initialize(resolve, reject,{ request: true, statusReceiver: false });
     }).then(initializeSuccess, handleError);
 
 });
 function requestPermissionSuccess() {
-    log("Accepted: Request coarse location privileges since scanning for unpaired devices.");
+    log("Accepted: Request coarse location privileges since scanning for unpaired devices.", "status");
 }
 function requestPermissionError() {
-    log("Denied: Request coarse location privileges since scanning for unpaired devices.");
+    log("Denied: Request coarse location privileges since scanning for unpaired devices.", "status");
 }
 
 function initializeSuccess(result) {
 
     if (result.status === "enabled") {
 
-        log("Bluetooth is enabled.");
+        log("Bluetooth is enabled.", "status");
         log(result);
+
     }
 
     else {
@@ -56,7 +55,17 @@ function initializeSuccess(result) {
 function startScan() {
 
     log("Starting scan for devices...", "status");
-    
+
+    permissions.hasPermission(permissions.CAMERA, function( status ){
+        if ( status.hasPermission ) {
+            log("hasPermission Yes :D ", "status");
+        }
+        else {
+            log("hasPermission No :( ", "status");
+            var permissions = cordova.plugins.permissions;
+            permissions.requestPermission(permissions.ACCESS_COARSE_LOCATION, requestPermissionSuccess, requestPermissionError);
+        }
+    });
     foundDevices = [];
 
     document.getElementById("devices").innerHTML = "";
@@ -72,6 +81,22 @@ function startScan() {
         bluetoothle.startScan(startScanSuccess, handleError, { services: [] });
     }
 }
+function requestPermissionError() {
+    log('ACCESS_COARSE_LOCATION permission is not turned on', "status");
+}
+
+function requestPermissionSuccess( status ) {
+    if( !status.hasPermission )
+        requestPermissionError();
+}
+
+
+
+
+
+
+
+
 
 function retrieveConnectedSuccess(result) {
 
