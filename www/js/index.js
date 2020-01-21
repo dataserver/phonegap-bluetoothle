@@ -56,13 +56,13 @@ function startScan() {
 
     log("Starting scan for devices...", "status");
 
-    permissions.hasPermission(permissions.CAMERA, function( status ){
+    var permissions = cordova.plugins.permissions;
+    permissions.hasPermission(permissions.ACCESS_COARSE_LOCATION, function( status ){
         if ( status.hasPermission ) {
             log("hasPermission Yes :D ", "status");
         }
         else {
             log("hasPermission No :( ", "status");
-            var permissions = cordova.plugins.permissions;
             permissions.requestPermission(permissions.ACCESS_COARSE_LOCATION, requestPermissionSuccess, requestPermissionError);
         }
     });
