@@ -19,23 +19,23 @@
  */
 
 var foundDevices = [];
-var permissions = cordova.plugins.permissions;
-permissions.hasPermission(permissions.ACCESS_COARSE_LOCATION, function( status ){
-    if ( status.hasPermission ) {
-        log("hasPermission Yes :D ", "status");
-    } else {
-        log("hasPermission No :( ", "status");
-        permissions.requestPermission(permissions.ACCESS_COARSE_LOCATION, requestPermissionSuccess, requestPermissionError);
-    }
-});
 
 document.addEventListener('deviceready', function () {
-
+    var permissions = cordova.plugins.permissions;
+    permissions.hasPermission(permissions.ACCESS_COARSE_LOCATION, function( status ){
+        if ( status.hasPermission ) {
+            log("hasPermission Yes :D ", "status");
+        } else {
+            log("hasPermission No :( ", "status");
+            permissions.requestPermission(permissions.ACCESS_COARSE_LOCATION, requestPermissionSuccess, requestPermissionError);
+        }
+    });
     new Promise(function (resolve, reject) {
         bluetoothle.initialize(resolve, reject,{ request: true, statusReceiver: false });
     }).then(initializeSuccess, handleError);
 
 });
+
 function requestPermissionSuccess() {
     log("Accepted: Request coarse location privileges since scanning for unpaired devices.", "status");
 }
