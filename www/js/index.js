@@ -23,10 +23,9 @@ var foundDevices = [];
 document.addEventListener('deviceready', function () {
 
     new Promise(function (resolve, reject) {
-        bluetoothle.requestPermission(requestPermissionSuccess, requestPermissionError);
-        bluetoothle.initialize(resolve, reject,
-                { request: true, statusReceiver: false });
-
+        bluetoothle.requestPermission(functin(){
+            bluetoothle.initialize(resolve, reject,{ request: true, statusReceiver: false });
+        }, requestPermissionError);
     }).then(initializeSuccess, handleError);
 
 });
