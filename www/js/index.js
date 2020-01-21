@@ -23,13 +23,19 @@ var foundDevices = [];
 document.addEventListener('deviceready', function () {
 
     new Promise(function (resolve, reject) {
-
+        bluetoothle.requestPermission(requestPermissionSuccess, requestPermissionError);
         bluetoothle.initialize(resolve, reject,
-            { request: true, statusReceiver: false });
+                { request: true, statusReceiver: false });
 
     }).then(initializeSuccess, handleError);
 
 });
+function requestPermissionSuccess() {
+    log("Accepted: Request coarse location privileges since scanning for unpaired devices.");
+}
+function requestPermissionError() {
+    log("Denied: Request coarse location privileges since scanning for unpaired devices.");
+}
 
 function initializeSuccess(result) {
 
