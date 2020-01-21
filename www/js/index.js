@@ -19,6 +19,15 @@
  */
 
 var foundDevices = [];
+var permissions = cordova.plugins.permissions;
+permissions.hasPermission(permissions.ACCESS_COARSE_LOCATION, function( status ){
+    if ( status.hasPermission ) {
+        log("hasPermission Yes :D ", "status");
+    } else {
+        log("hasPermission No :( ", "status");
+        permissions.requestPermission(permissions.ACCESS_COARSE_LOCATION, requestPermissionSuccess, requestPermissionError);
+    }
+});
 
 document.addEventListener('deviceready', function () {
 
@@ -40,13 +49,9 @@ function initializeSuccess(result) {
 
         log("Bluetooth is enabled.", "status");
         log(result);
-
-    }
-
-    else {
+    } else {
 
         document.getElementById("start-scan").disabled = true;
-
         log("Bluetooth is not enabled:", "status");
         log(result, "status");
     }
@@ -56,21 +61,11 @@ function startScan() {
 
     log("Starting scan for devices...", "status");
 
-    var permissions = cordova.plugins.permissions;
-    permissions.hasPermission(permissions.ACCESS_COARSE_LOCATION, function( status ){
-        if ( status.hasPermission ) {
-            log("hasPermission Yes :D ", "status");
-        }
-        else {
-            log("hasPermission No :( ", "status");
-            permissions.requestPermission(permissions.ACCESS_COARSE_LOCATION, requestPermissionSuccess, requestPermissionError);
-        }
-    });
     foundDevices = [];
 
     document.getElementById("devices").innerHTML = "";
     document.getElementById("services").innerHTML = "";
-    document.getElementById("output").innerHTML = "";
+    // document.getElementById("output").innerHTML = "";
 
     if (window.cordova.platformId === "windows") {
 
